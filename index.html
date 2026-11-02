@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-192.png"><link rel="stylesheet" href="style.css">
+<title>iroha</title></head><body>
+<header class="topbar"><div class="titleline"><h1>カレンダー</h1><button id="settings" aria-label="設定">⚙</button></div><div class="monthline"><div><h2 id="month"></h2><p id="recordSummary" class="muted"></p></div><div class="monthControls"><button id="todayBtn">今日</button><button id="prev" aria-label="前の月">‹</button><button id="next" aria-label="次の月">›</button></div></div></header>
+<main>
+<section id="calendarView"><div class="week"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div><div id="calendar" class="calendar"></div><section class="selectedPanel"><div class="selectedHead"><div><h3 id="selectedDateTitle"></h3><p id="selectedDateCount" class="muted"></p></div><button id="openSelected">この日を開く ›</button></div><div id="selectedPhotos" class="selectedPhotos"></div></section></section>
+<section id="dayView" hidden><div class="subhead"><button id="back">‹ 戻る</button><strong id="dayTitle"></strong></div><div class="albumWrap"><button id="bookCover" class="albumCover" aria-label="表紙をタップしてアルバムを開く"></button><div id="albumPages" class="albumPages" hidden></div></div></section>
+<section id="editDayView" hidden><div class="subhead"><button id="editDayBack">‹ 戻る</button><strong id="editDayTitle"></strong><button id="editDayAdd">＋</button></div><p class="muted editIntro">この日の写真と記録を編集できます。</p><div id="editDayList" class="editDayList"></div></section>
+<section id="settingsView" hidden><div class="subhead"><button id="settingsBack">‹ 戻る</button><strong>デザイン設定</strong></div>
+<div class="designPanel"><h3>背景・カラー</h3>
+<label>テーマ<select id="designTheme"><option value="dark">ダーク</option><option value="light">ライト</option><option value="pastel">パステル</option><option value="glass">ガラス</option></select></label>
+<label>背景色<input id="designColor" type="color" value="#0b0b0b"></label>
+<label>カレンダーのマスの色<input id="cellColor" type="color" value="#ffffff"></label>
+<div class="rangeLine"><span>マスの色の濃さ</span><output id="cellOpacityValue">12%</output></div><input id="cellOpacity" type="range" min="0" max="100" value="12">
+<label class="fileLabel">背景画像を選択<input id="designImage" type="file" accept="image/*"></label>
+<button type="button" id="clearDesignImage">背景画像を解除</button>
+<div class="rangeLine"><span>背景画像の透明度</span><output id="designOpacityValue">25%</output></div><input id="designOpacity" type="range" min="0" max="100" value="25">
+<label>カレンダー表示<select id="designStyle"><option value="simple">シンプル</option><option value="album">やわらかい角丸</option><option value="magazine">マガジン</option></select></label></div>
+<div class="designPanel"><h3>データ管理</h3><p>写真・タグ・メモはこのブラウザ内に保存されます。外部サーバーには送信しない設計です。</p>
+<button id="export">バックアップを書き出す</button><button id="importBackup">バックアップを復元</button><input id="backupFile" type="file" accept=".iroha,application/json" hidden>
+<p class="muted">バックアップはパスワードで暗号化します。パスワードを忘れると復元できません。定期的に別の安全な場所へ保管してください。</p></div></section>
+<section id="tagView" hidden><div class="subhead"><button id="tagBack">‹ 戻る</button><strong>タグ管理</strong></div><p class="muted">タグを先に登録しておくと、写真の情報を編集するときに選ぶだけで付けられます。</p><div id="tagList"></div><div class="inline"><input id="newTag" placeholder="新しいタグ"><input id="tagColor" type="color" value="#b98b79" aria-label="タグの色"><button id="createTag">追加</button></div></section>
+<section id="tagPhotosView" hidden><div class="subhead"><button id="tagPhotosBack">‹ タグ一覧</button><strong id="tagPhotosTitle">タグの写真</strong></div><div id="tagPhotoGrid" class="tagPhotoGrid"></div><p id="tagPhotoEmpty" class="muted" hidden>このタグが付いた写真はまだありません。</p></section>
+</main>
+<nav class="bottomNav"><button class="active" id="navCalendar">▦<span>カレンダー</span></button><button id="navAdd">▣<span>撮影</span></button><button id="navTags">▤<span>タグ</span></button></nav>
+<input id="photos" type="file" accept="image/*" multiple hidden>
+<dialog id="addDialog" class="addDialog"><form method="dialog" id="addForm">
+<div class="addHeader"><button type="button" id="closeAdd" aria-label="閉じる">‹</button><h2 id="addTitle" tabindex="-1">写真を追加</h2><span class="addHeaderSpacer"></span></div>
+<section class="addCalendarSection"><div class="addSectionTitle"><span>撮影日時</span><span id="addDateLabel" class="muted"></span></div><div class="addMonthBar"><button type="button" id="addPrevMonth">‹</button><strong id="addMonth"></strong><button type="button" id="addNextMonth">›</button></div><div class="addWeek">日 月 火 水 木 金 土</div><div id="addCalendar" class="addCalendar"></div><div class="addTimeRow"><label>時刻<input id="addTime" type="time" value="12:00"></label></div><input id="addDate" type="datetime-local" required hidden></section>
+<section class="addPhotoSection"><div class="addSectionTitle"><span>写真を選択</span><span id="addCount" class="muted">写真は最大20枚</span></div><button type="button" id="addMorePhotos" class="uploadZone"><span class="monoPhotoIcon" aria-hidden="true">▧＋</span><strong>写真を追加で選ぶ</strong><small>1日最大20枚・自動圧縮</small></button><div id="addPreview" class="addPreview"></div></section>
+<section class="addTagSection"><div class="addSectionTitle"><span>タグ</span><span class="muted">複数選択できます</span></div><div id="addTags" class="tagChoices"></div><p class="muted">タグの色は設定した色で半透明に表示されます。</p></section>
+<div class="dialogActions addActions"><button type="button" id="cancelAdd">キャンセル</button><button id="confirmAdd" value="add">追加する</button></div>
+</form></dialog>
+<dialog id="zoomDialog" class="zoomDialog"><div class="galleryHeader"><span id="galleryDate"></span><button type="button" id="closeZoom" aria-label="閉じる">×</button></div><div id="galleryTrack" class="galleryTrack" aria-label="写真一覧"></div></dialog>
+<dialog id="tagEditDialog"><form method="dialog" id="tagEditForm"><h2>タグを編集</h2><label>タグ名<input id="editTagName" required maxlength="30"></label><label>色<input id="editTagColor" type="color"></label><div class="dialogActions"><button value="cancel">キャンセル</button><button value="save" id="saveTagEdit">保存</button></div></form></dialog>
+<dialog id="editDialog"><form method="dialog" id="editForm"><h2 id="editTitle" tabindex="-1">写真の情報</h2><label>日時<input id="editDate" type="datetime-local"></label><label>メモ<textarea id="editMemo" rows="3"></textarea></label><p class="muted">タグ</p><div id="editTags"></div><div class="dialogActions"><button value="cancel">閉じる</button><button id="saveEdit" value="save">保存</button><button id="deletePhoto" value="delete" class="danger">削除</button></div></form></dialog>
+<script src="app.js"></script></body></html>
